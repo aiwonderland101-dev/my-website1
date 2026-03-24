@@ -27,7 +27,7 @@ const nextConfig = {
   // WebGL & Heavy Module Configuration
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      // Client-side: Increase memory for WebGL
+      // Client-side chunking strategy for better performance
       config.optimization = {
         ...config.optimization,
         splitChunks: {
@@ -35,30 +35,32 @@ const nextConfig = {
           cacheGroups: {
             default: false,
             vendors: false,
-            // Separate vendor chunk
-            vendor: {
-              filename: 'chunks/vendor.js',
-              test: /node_modules/,
-              priority: 10,
+            // Separate heavy WebGL libraries from other node_modules
+            webgl: {
+              test: /[\\/]node_modules[\\/](three|@react-three|babylon)/,
+              name: 'chunk-webgl',
+              priority: 30,
               reuseExistingChunk: true,
               enforce: true,
             },
-            // Separate WebGL libraries
-            webgl: {
-              filename: 'chunks/webgl.js',
-              test: /[\\/]node_modules[\\/](three|@react-three|babylon[\\/])?/,
-              priority: 20,
+            // Separate UI editor libraries
+            editors: {
+              test: /[\\/]node_modules[\\/](@measured|monaco|codemirror|ace)/,
+              name: 'chunk-editors',
+              priority: 25,
               reuseExistingChunk: true,
             },
-            // Separate Puck editor
-            puck: {
-              filename: 'chunks/puck.js',
-              test: /[\\/]node_modules[\\/]@measured[\\/]puck/,
-              priority: 20,
+            // Main vendor chunk for everything else
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'chunk-vendors',
+              priority: 10,
               reuseExistingChunk: true,
             },
+            // Common code shared between multiple entry points
             common: {
               minChunks: 2,
+              name: 'chunk-common',
               priority: 5,
               reuseExistingChunk: true,
             },

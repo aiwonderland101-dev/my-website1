@@ -14,7 +14,7 @@ interface ModelLibraryItem {
   url: string;
 }
 
-interface 3DAsset {
+interface Asset3D {
   name: string;
   type: 'model' | 'material' | 'skybox' | 'particle' | 'shader';
   libraries: string[];

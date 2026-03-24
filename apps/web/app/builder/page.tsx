@@ -38,7 +38,7 @@ function BuilderLoader() {
 }
 
 const TriEngineShell = dynamic(
-  () => import('../QuadEngineShell').then((m) => ({ default: m.QuadEngineShell })),
+  () => import('../../components/QuadEngineShell').then((m) => ({ default: m.QuadEngineShell })),
   { ssr: false, loading: () => <BuilderLoader /> }
 );
 
