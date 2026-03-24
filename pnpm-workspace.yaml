@@ -1,14 +1,1 @@
-packages:
-  - apps/*
-  - packages/*
-  - engine/**
-  - WonderSpace
-  - unreal-wonder-build
-  - ui
-
-onlyBuiltDependencies:
-  - canvas
-  - esbuild
-  - framer
-  - msw
-  - sharp
+packages:\n  - 'apps/*'\n  - 'packages/*'
