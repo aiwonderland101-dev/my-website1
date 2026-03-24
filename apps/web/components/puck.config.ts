@@ -7,11 +7,15 @@
  * Import in UnifiedPuckAIBuilder: import puckConfig from './puck.config';
  */
 
-import { Config, h } from '@puckeditor/core';
+import React from 'react';
+import { Config } from '@puckeditor/core';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+
+// Create a hyperscript helper using React.createElement
+const h = React.createElement;
 
 interface PuckBlockProps {
   [key: string]: any;

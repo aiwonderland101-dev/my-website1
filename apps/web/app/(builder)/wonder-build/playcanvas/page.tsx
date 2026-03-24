@@ -14,6 +14,9 @@ import PlayCanvasPublisher from "@/components/PlayCanvasPublisher";
 import { createNpcProviderFromEnv } from "@/lib/ai/convaiNpcProvider";
 import { buildPlayCanvasEditorUrl, getPlayCanvasMode } from "@/lib/playcanvas";
 
+// Disable static prerendering for this page since it requires dynamic data
+export const dynamic = 'force-dynamic';
+
 function makeToastId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }

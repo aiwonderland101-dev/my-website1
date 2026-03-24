@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Puck, PuckAction } from '@puckeditor/core';
 import puckConfig from './puck.config';
-import { AiChat } from '../../../ui/components/AiChat';
+import AiChat from '../../../ui/components/AiChat';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
