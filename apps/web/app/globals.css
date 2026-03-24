@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import "../styles/wonderland-core.css";
+@import "../styles/tie-dye-neon.css";
 
 :root {
   --background: oklch(0.97 0.02 225.66);
