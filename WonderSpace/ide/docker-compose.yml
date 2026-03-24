@@ -1,0 +1,18 @@
+kservices:
+  ide:
+    image: codercom/code-server:latest
+    container_name: wonderspace-ide
+    environment:
+      - PASSWORD=${IDE_PASSWORD}
+      - TZ=America/Chicago
+    volumes:
+      - ./data:/home/coder                 # persists settings/extensions
+      - ../../:/workspaces/my_website      # mount repo (from WonderSpace/ide up to repo root)
+    command: >
+      code-server
+      --bind-addr 0.0.0.0:8080
+      --auth password
+      --disable-telemetry
+      /workspaces/my_website
+    ports:
+      - "8080:8080"

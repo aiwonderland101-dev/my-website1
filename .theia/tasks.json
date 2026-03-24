@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "WonderSpace: Sync Assets (dry-run)",
+      "type": "shell",
+      "command": "node scripts/registry/sync-assets.mjs --dry-run"
+    },
+    {
+      "label": "WonderSpace: Sync Assets (apply)",
+      "type": "shell",
+      "command": "node scripts/registry/sync-assets.mjs"
+    }
+  ]
+}

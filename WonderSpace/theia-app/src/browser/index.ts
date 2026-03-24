@@ -1,0 +1,2 @@
+import './wonderspace-frontend-module';
+

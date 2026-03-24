@@ -1,0 +1,61 @@
+{
+  "name": "wonderspace-theia-app",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "theia build",
+    "start": "theia start --hostname 0.0.0.0 --port 3000 /workspaces/my_website"
+  },
+  "dependencies": {
+    "@theia/application-package": "1.68.2",
+    "@theia/core": "1.68.2",
+    "@theia/workspace": "1.68.2",
+    "@theia/filesystem": "1.68.2",
+    "@theia/navigator": "1.68.2",
+    "@theia/terminal": "1.68.2",
+    "@theia/output": "1.68.2",
+    "@theia/markers": "1.68.2",
+    "@theia/task": "1.68.2",
+    "@theia/search-in-workspace": "1.68.2",
+    "@theia/file-search": "1.68.2",
+    "@theia/git": "1.68.2",
+    "@theia/scm": "1.68.2",
+    "@theia/scm-extra": "1.68.2",
+    "@theia/editor": "1.68.2",
+    "@theia/monaco": "1.68.2",
+    "@theia/preferences": "1.68.2",
+    "@theia/file-icons": "1.68.2",
+    "@theia/plugin-ext": "1.68.2",
+    "@theia/plugin-ext-vscode": "1.68.2",
+    "@theia/vsx-registry": "1.68.2",
+    "@theia/view-container": "1.68.2",
+    "@theia/messages": "1.68.2"
+  },
+  "devDependencies": {
+    "@theia/cli": "1.68.2"
+  },
+  "theia": {
+    "frontend": {
+      "config": {
+        "applicationName": "WonderSpace",
+        "defaultTheme": "dark",
+        "defaultIconTheme": "theia-file-icons",
+        "preferences": {
+          "workbench.colorTheme": "Dark (Theia)",
+          "editor.fontLigatures": true,
+          "files.autoSave": "onFocusChange",
+          "terminal.integrated.defaultProfile.linux": "bash"
+        }
+      }
+    }
+  },
+  "theiaPluginsDir": "plugins",
+  "theiaExtensions": [
+    {
+      "frontend": "src/browser/wonderspace-frontend-module"
+    },
+    {
+      "backend": "src/node/wonderspace-backend-module"
+    }
+  ]
+}

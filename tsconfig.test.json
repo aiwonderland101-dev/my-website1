@@ -1,0 +1,41 @@
+
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["apps/web/*"],
+      "@app/*": ["apps/web/app/*"],
+      "@builder/*": ["apps/web/app/(builder)/wonder-build/*"],
+      "@builder-engine/*": ["unreal-wonder-build/components/*"],
+      "@core/*": ["engine/core/*"],
+      "@components/*": ["ui/components/*"],
+      "@lib/*": ["apps/web/lib/*"],
+      "@engine/*": ["engine/*"],
+      "@ui/*": ["ui/*"],
+      "@infra/*": ["infra/*"],
+      "@types/*": ["types/*"],
+      "@puckeditor/core": ["packages/puckeditor-core/index.js"],
+      "@puckeditor/core/*": ["packages/puckeditor-core/*"],
+      "@theia/*": ["WonderSpace/theia-app/src/*"]
+    }
+  },
+  "include": [
+    "apps/web/next-env.d.ts",
+    "apps/web/.next/types/**/*.ts",
+    "apps/web/app/**/*.ts",
+    "apps/web/app/**/*.tsx",
+    "engine/core/**/*.ts",
+    "engine/core/**/*.tsx",
+    "ui/components/**/*.ts",
+    "ui/components/**/*.tsx",
+    "packages/**/*.ts",
+    "packages/**/*.tsx",
+    "engine/**/*.ts",
+    "ui/**/*.ts",
+    "WonderSpace/theia-app/src/**/*.ts",
+    "unreal-wonder-build/**/*.ts",
+    "unreal-wonder-build/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}

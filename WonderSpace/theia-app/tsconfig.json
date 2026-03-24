@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/@theia/application-package/lib/tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src"
+  },
+  "include": ["src"]
+}

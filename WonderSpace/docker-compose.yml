@@ -1,0 +1,18 @@
+services:
+  wonderspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./workspace:/home/theia/workspace
+    environment:
+      AI_API_URL: ${AI_API_URL}
+      AI_API_KEY: ${AI_API_KEY}
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      SUPABASE_BUCKET: ${SUPABASE_BUCKET:-}
+      SUPABASE_PREFIX: ${SUPABASE_PREFIX:-}
+      SUPABASE_MOUNT_DIR: ${SUPABASE_MOUNT_DIR:-/home/theia/workspace/supabase}
+    restart: unless-stopped

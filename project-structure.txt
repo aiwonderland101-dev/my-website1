@@ -1,0 +1,16 @@
+AI Wonderland repository map:
+
+- apps/web: product application (public pages, dashboard/workspace, builder tools, API routes)
+- docs: generated documentation and guide mirrors
+- scripts: helper scripts for sync, smoke tests, and automation
+- supabase: migration + function definitions
+- tests: Vitest suite enforcing routing and contract integrity
+- ui: reusable UI building blocks
+- Wonder-build: standalone runtime/demo surface
+
+Top-level docs:
+- README.md: project overview and setup
+- ARCHITECTURE.md: boundaries and module responsibilities
+- DEPLOYMENT.md: release workflow and verification
+- CONTRIBUTING.md: contribution standards
+- FAQ.md: quick product/repo reference
