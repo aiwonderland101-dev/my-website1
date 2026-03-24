@@ -264,6 +264,57 @@ export default function Homepage() {
         </div>
       </section>
 
+      {/* ─── BUILDER SHOWCASE SCREENSHOTS ───────────────────────────────────── */}
+      <section id="builder-showcase" className="mx-auto mt-8 w-full max-w-7xl px-6 sm:px-8">
+        <div className="rounded-2xl border border-white/10 bg-slate-900/50 p-6 shadow-xl shadow-cyan-900/20 backdrop-blur-sm">
+          <h2 className="text-3xl font-bold text-white">Builder Showcase</h2>
+          <p className="mt-2 text-sm text-white/70">These are snapshots of the engines in action. Each card opens the builder experience so you can continue the flow immediately.</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              {
+                title: 'PlayCanvas 3D Studio',
+                image: '/images/screenshots/playcanvas-builder.svg',
+                href: '/wonder-build/playcanvas',
+                desc: 'Realtime 3D world builder with physics, materials, and scene graph.',
+              },
+              {
+                title: 'WebGL Studio',
+                image: '/images/screenshots/webgl-builder.svg',
+                href: '/unreal-wonder-build',
+                desc: 'Interactive shader editor and real-time render pipeline.',
+              },
+              {
+                title: 'Puck UI Builder',
+                image: '/images/screenshots/puck-builder.svg',
+                href: '/wonder-build/puck',
+                desc: 'UI component builder with responsive grids and design tokens.',
+              },
+              {
+                title: 'Theia IDE Workspace',
+                image: '/images/screenshots/theia-builder.svg',
+                href: '/ide',
+                desc: 'Cloud IDE for custom coding, debugging, and deployment flows.',
+              },
+            ].map((card) => (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="group overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/80 p-3 transition duration-300 hover:border-cyan-400/80 hover:bg-slate-900"
+              >
+                <div className="relative h-40 w-full overflow-hidden rounded-xl border border-slate-700/60">
+                  <Image src={card.image} alt={`${card.title} screenshot`} fill className="object-cover opacity-95 transition duration-300 group-hover:scale-105 group-hover:opacity-100" sizes="(max-width: 768px) 320px, 600px" />
+                </div>
+                <div className="mt-3">
+                  <h3 className="text-lg font-semibold text-white">{card.title}</h3>
+                  <p className="mt-1 text-sm text-white/70">{card.desc}</p>
+                  <span className="mt-2 inline-flex items-center text-xs font-semibold text-cyan-300">Open builder →</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── REGISTRY / MARKETPLACE ─────────────────────────────────────────── */}
       <section id="features" className="relative mx-auto mt-10 w-full max-w-6xl px-6 sm:px-8">
         <div className="mb-6 flex items-end justify-between">
