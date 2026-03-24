@@ -10,6 +10,7 @@ import { EmptyState, SkeletonGrid } from "@/app/components/feedback/EmptyState";
 import { ToastStack, type ToastItem } from "@/app/components/feedback/ToastStack";
 import NpcPanel from "@/components/NpcPanel";
 import PlayCanvasEditorHost from "@/components/PlayCanvasEditorHost";
+import PlayCanvasPublisher from "@/components/PlayCanvasPublisher";
 import { createNpcProviderFromEnv } from "@/lib/ai/convaiNpcProvider";
 import { buildPlayCanvasEditorUrl, getPlayCanvasMode } from "@/lib/playcanvas";
 
@@ -100,49 +101,61 @@ function PlayCanvasInner() {
           }
         />
       ) : (
-        <div className="relative min-h-[560px] overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-          {bridgeFailed ? (
-            <div className="p-6">
-              <div className="rounded-2xl border border-red-400/40 bg-red-500/10 px-6 py-8 text-center">
-                <h3 className="text-lg font-bold text-white">Embed blocked — continue in PlayCanvas</h3>
-                <p className="mx-auto mt-2 max-w-2xl text-sm text-white/70">
-                  The in-app WonderPlay embed did not report readiness in time. Open the editor in a new tab to continue building.
-                </p>
-                <div className="mt-5">
-                  <a
-                    href={editorUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-10 items-center rounded-lg bg-cyan-400 px-4 text-sm font-semibold text-black"
-                  >
-                    Open PlayCanvas in New Tab
-                  </a>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* PlayCanvas Editor - Takes up 2 columns on large screens */}
+          <div className="lg:col-span-2 relative min-h-[560px] overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+            {bridgeFailed ? (
+              <div className="p-6">
+                <div className="rounded-2xl border border-red-400/40 bg-red-500/10 px-6 py-8 text-center">
+                  <h3 className="text-lg font-bold text-white">Embed blocked — continue in PlayCanvas</h3>
+                  <p className="mx-auto mt-2 max-w-2xl text-sm text-white/70">
+                    The in-app WonderPlay embed did not report readiness in time. Open the editor in a new tab to continue building.
+                  </p>
+                  <div className="mt-5">
+                    <a
+                      href={editorUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-10 items-center rounded-lg bg-cyan-400 px-4 text-sm font-semibold text-black"
+                    >
+                      Open PlayCanvas in New Tab
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <>
-              {bridgeLoading ? (
-                <div className="absolute inset-0 p-4">
-                  <SkeletonGrid cards={2} />
-                </div>
-              ) : null}
+            ) : (
+              <>
+                {bridgeLoading ? (
+                  <div className="absolute inset-0 p-4">
+                    <SkeletonGrid cards={2} />
+                  </div>
+                ) : null}
 
-              <PlayCanvasEditorHost
-                sceneId={sceneId}
-                onReady={() => {
-                  setBridgeLoading(false);
-                  setBridgeFailed(false);
-                  pushToast("WonderPlay connected.", "success");
-                }}
-                onError={() => {
-                  setBridgeLoading(false);
-                  setBridgeFailed(true);
-                  pushToast("Could not embed WonderPlay. Continue in a new tab.", "error");
-                }}
-              />
-            </>
-          )}
+                <PlayCanvasEditorHost
+                  sceneId={sceneId}
+                  onReady={() => {
+                    setBridgeLoading(false);
+                    setBridgeFailed(false);
+                    pushToast("WonderPlay connected.", "success");
+                  }}
+                  onError={() => {
+                    setBridgeLoading(false);
+                    setBridgeFailed(true);
+                    pushToast("Could not embed WonderPlay. Continue in a new tab.", "error");
+                  }}
+                />
+              </>
+            )}
+          </div>
+
+          {/* Publishing Panel - Takes up 1 column on large screens */}
+          <div className="lg:col-span-1">
+            <PlayCanvasPublisher
+              onProductPublished={() => {
+                pushToast("Product successfully published to community library!", "success");
+              }}
+            />
+          </div>
         </div>
       )}
 

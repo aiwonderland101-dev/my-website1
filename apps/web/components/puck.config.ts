@@ -42,7 +42,7 @@ const HeroBlock = ({ title = 'Welcome', subtitle = '', cta = 'Get Started', hide
 /**
  * Contact Block - Form for collecting user inquiries
  */
-const ContactBlock = ({ formTitle = 'Get In Touch', buttonText = 'Send Message': PuckBlockProps) => {
+const ContactBlock = ({ formTitle = 'Get In Touch', buttonText = 'Send Message' }: PuckBlockProps) => {
   return h(
     Card,
     { style: { marginBottom: '20px' } },
