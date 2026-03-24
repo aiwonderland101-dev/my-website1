@@ -10,12 +10,12 @@ RUN pnpm install --no-frozen-lockfile
 COPY theia-app ./
 RUN pnpm build
 
-FROM eclipse-theia/theia:1.68.2
+FROM eclipse/theia:latest
 
 USER root
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends unzip \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update \
+    && apk add --no-cache unzip \
+    && rm -rf /var/cache/apk/*
 
 COPY --from=build /build/theia-app /home/theia/theia-app
 COPY scripts/supabase_mount.mjs /home/theia/bin/supabase_mount.mjs
