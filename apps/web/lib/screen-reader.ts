@@ -18,7 +18,12 @@ class ScreenReaderService {
   private isSpeaking: boolean = false;
 
   constructor() {
-    this.isSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    // Check if we're in a browser environment before accessing window
+    if (typeof window !== 'undefined') {
+      this.isSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    } else {
+      this.isSupported = false;
+    }
   }
 
   /**
@@ -79,7 +84,9 @@ class ScreenReaderService {
         };
 
         this.utterance = utterance;
-        window.speechSynthesis.speak(utterance);
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+          window.speechSynthesis.speak(utterance);
+        }
       } catch (error) {
         reject(error);
       }
@@ -101,7 +108,9 @@ class ScreenReaderService {
    * Stop current speech
    */
   stop(): void {
-    window.speechSynthesis.cancel();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     this.isSpeaking = false;
     this.queue = [];
   }
@@ -110,7 +119,7 @@ class ScreenReaderService {
    * Pause speech
    */
   pause(): void {
-    if (window.speechSynthesis.speaking) {
+    if (typeof window !== 'undefined' && window.speechSynthesis && window.speechSynthesis.speaking) {
       window.speechSynthesis.pause();
     }
   }
@@ -119,7 +128,7 @@ class ScreenReaderService {
    * Resume speech
    */
   resume(): void {
-    if (window.speechSynthesis.paused) {
+    if (typeof window !== 'undefined' && window.speechSynthesis && window.speechSynthesis.paused) {
       window.speechSynthesis.resume();
     }
   }
@@ -138,14 +147,20 @@ class ScreenReaderService {
    * Check if currently speaking
    */
   isSpeakingNow(): boolean {
-    return this.isSpeaking || window.speechSynthesis.speaking;
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      return this.isSpeaking || window.speechSynthesis.speaking;
+    }
+    return this.isSpeaking;
   }
 
   /**
    * Get available voices
    */
   getVoices(): SpeechSynthesisVoice[] {
-    return window.speechSynthesis.getVoices();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      return window.speechSynthesis.getVoices();
+    }
+    return [];
   }
 
   /**

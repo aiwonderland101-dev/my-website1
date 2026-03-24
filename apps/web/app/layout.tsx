@@ -6,8 +6,7 @@ import { BuilderProvider } from "@/app/(builder)/wonder-build/context/BuilderCon
 import { AccessibilityProvider } from "@/lib/accessibility-context";
 import { BuilderNavDropdown } from "@/app/components/navigation/BuilderNavDropdown";
 import { PlayCanvasBootstrapStartup } from "@/app/components/startup/PlayCanvasBootstrapStartup";
-import { AccessibilityOracle } from "@/components/AccessibilityOracle";
-import { VisualTranscript } from "@/components/VisualTranscript";
+import { ClientAccessibilityWrapper } from "@/components/ClientAccessibilityWrapper";
 import { cn } from "@/lib/utils";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -24,9 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </div>
               {children}
-              {/* Persistent accessibility components */}
-              <VisualTranscript />
-              <AccessibilityOracle />
+              {/* Persistent accessibility components - wrapped in client component */}
+              <ClientAccessibilityWrapper />
             </AccessibilityProvider>
           </BuilderProvider>
         </AuthProvider>
