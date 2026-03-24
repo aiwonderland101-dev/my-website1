@@ -88,13 +88,6 @@ const nextConfig = {
       ],
     },
   ],
-
-  // Memory optimization for heavy assets
-  onError: (err) => {
-    if (err.code === 'MODULE_NOT_FOUND') {
-      console.error('Module not found:', err.message);
-    }
-  },
 };
 
 module.exports = nextConfig;

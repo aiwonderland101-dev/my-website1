@@ -8,7 +8,9 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import '../styles/tie-dye-neon.css';
+import { PAGES, getPagesByCategory } from '../lib/navigation';
 
 // Dynamically import engines with ssr: false to prevent server-side issues
 const PlayCanvasEngine = dynamic(() => import('./engines/PlayCanvasEngine'), {
