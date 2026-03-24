@@ -200,28 +200,100 @@ export function QuadEngineShell() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-black via-black to-black">
-        {/* Top Bar */}
-        <header className="border-b-2 border-blue-500/30 bg-black/80 backdrop-blur p-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div
-              className="engine-active w-3 h-3 rounded-full"
-              style={{ boxShadow: `0 0 10px ${currentEngine.color}` }}
-            />
-            <span className="cyberpunk-text text-xs bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-              {currentEngine.label}
-            </span>
+        {/* Global Navigation Header */}
+        <header className="border-b-4 border-cyan-500/50 bg-black/90 backdrop-blur">
+          {/* Top Navigation Bar */}
+          <div className="p-3 flex items-center justify-between border-b border-blue-500/30 bg-black/50">
+            <div className="flex items-center gap-3">
+              <div
+                className="engine-active w-4 h-4 rounded-full"
+                style={{ boxShadow: `0 0 15px ${currentEngine.color}` }}
+              />
+              <span className="cyberpunk-text text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-blue-500 to-green-500">
+                AI-WONDERLAND
+              </span>
+              <span className="text-xs text-cyan-400 font-mono ml-2">
+                {currentEngine.label}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Link href="/" className="px-3 py-1 rounded text-xs hover:bg-cyan-500/20 transition">
+                🏠 Home
+              </Link>
+              <a href="/play" className="px-3 py-1 rounded text-xs hover:bg-green-500/20 transition">
+                ▶️ Play
+              </a>
+              <a href="/marketplace" className="px-3 py-1 rounded text-xs hover:bg-purple-500/20 transition">
+                🛍️ Marketplace
+              </a>
+              <a href="/community" className="px-3 py-1 rounded text-xs hover:bg-pink-500/20 transition">
+                👥 Community
+              </a>
+              <a href="/docs" className="px-3 py-1 rounded text-xs hover:bg-yellow-500/20 transition">
+                📖 Docs
+              </a>
+              <a href="/support" className="px-3 py-1 rounded text-xs hover:bg-red-500/20 transition">
+                💬 Support
+              </a>
+
+              <div className="ml-4 border-l border-white/20 pl-4 flex gap-2">
+                <button className="neon-button px-3 py-1 text-xs" title="Settings (Ctrl+,)">
+                  ⚙️
+                </button>
+                <button className="neon-button px-3 py-1 text-xs" title="Save Project (Ctrl+S)">
+                  💾
+                </button>
+                <button className="neon-button px-3 py-1 text-xs" title="Export (Ctrl+E)">
+                  📤
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="flex gap-3">
-            <button className="neon-button px-4 py-2" title="Settings (Ctrl+,)">
-              ⚙️
-            </button>
-            <button className="neon-button px-4 py-2" title="Save Project (Ctrl+S)">
-              💾
-            </button>
-            <button className="neon-button px-4 py-2" title="Export (Ctrl+E)">
-              📤
-            </button>
+          {/* Quick Navigation Tabs */}
+          <div className="px-4 py-2 flex items-center gap-2 overflow-x-auto bg-black/30 text-xs border-b border-blue-500/20">
+            <span className="text-white/50 font-semibold">Navigate:</span>
+            
+            {/* Builders */}
+            <div className="flex gap-1 px-2 border-r border-white/20">
+              <Link href="/builder-ai" className="px-2 py-1 rounded hover:bg-blue-500/20 transition text-blue-300">
+                🤖 AI Builder
+              </Link>
+              <Link href="/builder" className="px-2 py-1 rounded hover:bg-blue-500/20 transition text-blue-300">
+                🔨 Builder
+              </Link>
+            </div>
+
+            {/* Workspaces */}
+            <div className="flex gap-1 px-2 border-r border-white/20">
+              <a href="/(workspace)/dashboard" className="px-2 py-1 rounded hover:bg-green-500/20 transition text-green-300">
+                📊 Dashboard
+              </a>
+              <a href="/(workspace)/projects" className="px-2 py-1 rounded hover:bg-green-500/20 transition text-green-300">
+                📁 Projects
+              </a>
+            </div>
+
+            {/* Tools */}
+            <div className="flex gap-1 px-2 border-r border-white/20">
+              <a href="/settings" className="px-2 py-1 rounded hover:bg-yellow-500/20 transition text-yellow-300">
+                ⚡ Settings
+              </a>
+              <a href="/connect-storage" className="px-2 py-1 rounded hover:bg-yellow-500/20 transition text-yellow-300">
+                ☁️ Storage
+              </a>
+            </div>
+
+            {/* Learning */}
+            <div className="flex gap-1 px-2">
+              <a href="/tutorials" className="px-2 py-1 rounded hover:bg-purple-500/20 transition text-purple-300">
+                📚 Tutorials
+              </a>
+              <a href="/api-reference" className="px-2 py-1 rounded hover:bg-purple-500/20 transition text-purple-300">
+                📋 API Ref
+              </a>
+            </div>
           </div>
         </header>
 

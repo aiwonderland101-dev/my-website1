@@ -4,6 +4,7 @@
  */
 
 export { QuadEngineShell } from './QuadEngineShell';
+export { GlobalNavigation } from './GlobalNavigation';
 export { BYOCSettings } from './BYOC/BYOCSettings';
 
 // Engine exports
