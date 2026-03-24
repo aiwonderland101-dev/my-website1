@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "../styles/wonderland-core.css";
+
 :root {
   --background: oklch(0.97 0.02 225.66);
   --foreground: oklch(0.15 0.02 269.18);

@@ -95,11 +95,20 @@ const initialSharedState: SharedState = {
   variables: {},
 };
 
+interface AIConfession {
+  timestamp: number;
+  confidence: number;
+  confession: string;
+  trustScore: number;
+}
+
 export function QuadEngineShell() {
   const [active, setActive] = useState<Engine>('code');
   const [cmdOpen, setCmdOpen] = useState(false);
   const [prompt, setPrompt] = useState('');
   const [cmdLog, setCmdLog] = useState<{ text: string; type: 'user' | 'system' }[]>([]);
+  const [confessionsOpen, setConfessionsOpen] = useState(true);
+  const [confessions, setConfessions] = useState<AIConfession[]>([]);
   const [bridgeStatus, setBridgeStatus] = useState<Record<Engine, 'loading' | 'ready' | 'error'>>({
     code: 'loading',
     webgls: 'loading',
@@ -152,6 +161,16 @@ export function QuadEngineShell() {
     setCmdLog(prev => [...prev, { text, type: 'user' }]);
     setPrompt('');
 
+    // Simulate AI response with confessions
+    const aiConfidence = Math.floor(Math.random() * (95 - 60) + 60); // 60-95%
+    const newConfession: AIConfession = {
+      timestamp: Date.now(),
+      confidence: aiConfidence,
+      confession: `${active === 'code' ? 'Code Generation' : active === 'webgls' ? 'Shader Creation' : active === '3d' ? '3D Scene' : 'UI Layout'} - Confidence: ${aiConfidence}%. Internal note: Prioritized speed over exhaustive verification.`,
+      trustScore: aiConfidence / 100,
+    };
+    setConfessions(prev => [newConfession, ...prev].slice(0, 8));
+
     if (active === 'code') {
       theiaRef.current?.contentWindow?.postMessage(
         { command: 'wonder:inject', code: text, type: 'code' },
@@ -187,7 +206,7 @@ export function QuadEngineShell() {
   }
 
   return (
-    <div className="fixed inset-0 flex bg-[#0a0a0a] text-white overflow-hidden">
+    <div className="fixed inset-0 flex bg-[#0a0a0a] text-white overflow-hidden quad-engine-shell">
 
       {/* ── LEFT ICON RAIL ─────────────────────────────────────────────── */}
       <nav className="z-40 flex w-12 shrink-0 flex-col items-center border-r border-white/10 bg-black py-3 gap-1">
@@ -203,17 +222,17 @@ export function QuadEngineShell() {
           </svg>
         </Link>
 
-        <div className="w-7 h-px bg-white/10 mb-1" />
+        <div className="w-7 h-px bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-50 mb-1" />
 
-        {/* Engine tabs */}
+        {/* Engine tabs with tie-dye styling */}
         {ENGINES.map(eng => (
           <button
             key={eng.id}
             onClick={() => setActive(eng.id)}
             title={eng.label}
-            className={`group relative flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
+            className={`group relative flex h-10 w-10 items-center justify-center rounded-xl border transition-all engine-tab ${
               active === eng.id
-                ? eng.accentBorder
+                ? `${eng.accentBorder} tie-dye-shadow`
                 : 'border-transparent text-white/30 hover:border-white/20 hover:text-white/70'
             }`}
           >
@@ -234,7 +253,7 @@ export function QuadEngineShell() {
           title="AI Command Center"
           className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
             cmdOpen
-              ? 'border-violet-500/50 bg-violet-500/10 text-violet-300'
+              ? 'border-violet-500/50 bg-violet-500/10 text-violet-300 tie-dye-shadow'
               : 'border-transparent text-white/30 hover:border-white/20 hover:text-white/70'
           }`}
         >
@@ -248,10 +267,10 @@ export function QuadEngineShell() {
       {/* ── MAIN CONTENT ───────────────────────────────────────────────── */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
 
-        {/* Top bar */}
-        <header className="flex h-9 shrink-0 items-center justify-between border-b border-white/10 bg-black/80 px-4 backdrop-blur">
+        {/* Top bar with tie-dye accent */}
+        <header className="flex h-9 shrink-0 items-center justify-between border-b border-white/10 bg-black/80 px-4 backdrop-blur neon-header">
           <div className="flex items-center gap-3">
-            <span className={`text-xs font-bold tracking-wider ${activeEngine.accentClass}`}>
+            <span className={`text-xs font-bold tracking-wider tie-dye-text`}>
               {activeEngine.shortLabel}
             </span>
             <span className="hidden sm:block text-[10px] text-white/30">{activeEngine.hint}</span>
@@ -415,6 +434,78 @@ export function QuadEngineShell() {
             <p className="mt-1 text-center text-[9px] text-white/20">⌘↵ to send</p>
           </div>
         </aside>
+      )}
+
+      {/* ── AI CONFESSIONS WINDOW (bottom-right overlay) ───────────────── */}
+      {confessionsOpen && (
+        <div className="fixed bottom-6 right-6 w-80 max-h-96 z-30 pointer-events-none">
+          <div className="tie-dye-border rounded-2xl bg-gradient-to-br from-black/95 via-black/90 to-black/95 backdrop-blur-xl p-4">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 animate-pulse" />
+                <p className="text-[10px] font-mono uppercase tracking-widest tie-dye-text">AI Confessions</p>
+              </div>
+              <button
+                onClick={() => setConfessionsOpen(false)}
+                className="text-white/50 hover:text-white/80 transition-colors cursor-pointer pointer-events-auto"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Confessions Log */}
+            <div className="space-y-2 overflow-y-auto max-h-80">
+              {confessions.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-6 text-center opacity-50">
+                  <p className="text-[9px] text-white/40">
+                    AI transparency layer.<br/>Send commands to reveal confessions.
+                  </p>
+                </div>
+              ) : (
+                confessions.map((confession, i) => (
+                  <div
+                    key={i}
+                    className="rounded-lg border border-white/10 bg-white/[0.02] p-2.5 text-[9px] leading-relaxed backdrop-blur"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-white/60 font-mono">
+                        Confidence: <span className="tie-dye-text font-bold">{confession.confidence}%</span>
+                      </span>
+                      <span className="text-white/40 font-mono text-[8px]">
+                        {new Date(confession.timestamp).toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <p className="text-white/50 italic leading-relaxed">"{confession.confession}"</p>
+                    <div className="mt-2 h-1 rounded-full bg-gradient-to-r from-transparent via-pink-500/40 via-purple-500/40 to-transparent" style={{ width: `${confession.trustScore * 100}%` }} />
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-3 pt-3 border-t border-white/10 text-center">
+              <p className="text-[8px] uppercase tracking-widest text-white/30">
+                Non-interactive transparency layer • Real-time AI reasoning
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confessions toggle (fixed bottom-left) */}
+      {!confessionsOpen && (
+        <button
+          onClick={() => setConfessionsOpen(true)}
+          className="fixed bottom-6 left-6 z-30 flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 hover:text-white/80 transition-all cursor-pointer pointer-events-auto hover:bg-white/10"
+          title="Show AI Confessions"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+          </svg>
+        </button>
       )}
     </div>
   );

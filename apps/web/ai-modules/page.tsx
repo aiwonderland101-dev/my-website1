@@ -174,14 +174,14 @@ export default function ConstitutionalPlayground() {
         </div>
 
         {/* HEADER */}
-        <header className="z-20 h-20 border-b border-white/5 bg-black/60 backdrop-blur-md flex items-center justify-between px-10">
+        <header className="z-20 h-20 border-b tie-dye-border bg-gradient-to-r from-black/80 via-black/70 to-black/80 backdrop-blur-md flex items-center justify-between px-10">
           <div className="flex items-center gap-6">
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-amber-600 uppercase tracking-[0.3em]">
+              <span className="text-[10px] font-black tie-dye-text uppercase tracking-[0.3em]">
                 Compliance_Engine
               </span>
               <div className="flex items-center gap-2 text-white font-bold tracking-tighter italic">
-                <Scale size={14} className="text-amber-500" /> EGYPT_CORE_v1.0
+                <Scale size={14} className="tie-dye-glow text-amber-500" /> EGYPT_CORE_v1.0
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default function ConstitutionalPlayground() {
               }}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
                 isRobotVoiced
-                  ? "bg-amber-500/10 border-amber-500/50 text-amber-500"
+                  ? "bg-amber-500/10 border-amber-500/50 text-amber-500 tie-dye-shadow"
                   : "bg-white/5 border-white/10 text-slate-500"
               }`}
             >
@@ -207,7 +207,7 @@ export default function ConstitutionalPlayground() {
             <div
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[9px] font-black uppercase tracking-widest ${
                 byocLinked
-                  ? "bg-purple-500/10 border-purple-500/40 text-purple-300"
+                  ? "bg-purple-500/10 border-purple-500/40 text-purple-300 tie-dye-shadow"
                   : "bg-white/5 border-white/10 text-slate-600"
               }`}
             >
@@ -217,14 +217,14 @@ export default function ConstitutionalPlayground() {
           </div>
 
           {/* Tab Switcher */}
-          <div className="flex bg-black/80 rounded-2xl p-1 border border-white/10 shadow-inner">
+          <div className="flex bg-black/80 rounded-2xl p-1 border tie-dye-border shadow-inner">
             {(["text", "voice", "training"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-5 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all uppercase ${
                   activeTab === tab
-                    ? "bg-amber-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-white shadow-lg tie-dye-shadow"
                     : "text-slate-600 hover:text-slate-400"
                 }`}
               >
