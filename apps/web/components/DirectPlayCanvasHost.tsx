@@ -49,7 +49,15 @@ export function DirectPlayCanvasHost({ sceneId, onReady, onError, onStatus }: Pl
       onStatus?.("mounting");
 
       try {
-        cleanup = bootstrap.mount(container, { sceneId });
+        cleanup = await bootstrap.mount(container, {
+          sceneId,
+          graphicsDeviceOptions: {
+            deviceTypes: ["webgpu", "webgl2"],
+            antialias: true,
+            glslangUrl: "https://unpkg.com/@webgpu/glslang@0.0.15/dist/web-devel/glslang.js",
+            twgslUrl: "https://unpkg.com/twgsl@0.4.0/twgsl.js",
+          },
+        });
         if (cancelled) {
           cleanup?.destroy?.();
           return;
