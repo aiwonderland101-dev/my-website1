@@ -104,3 +104,4 @@ export function DirectPlayCanvasHost({ sceneId, onReady, onError, onStatus }: Pl
   );
 }
 // Launch Date: March 2026
+// Vercel-Identity-Fix
