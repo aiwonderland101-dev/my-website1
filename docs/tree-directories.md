@@ -4,13 +4,6 @@
 
 ```
 .
-├── .github
-│   ├── workflows
-│   │   ├── ci.yml
-│   │   ├── deploy-workers.yml
-│   │   ├── lint.yml
-│   │   └── main.yml
-│   └── dependabot.yml
 ├── .idx
 │   ├── dev.nix
 │   └── integrations.json
@@ -19,26 +12,36 @@
 ├── apps
 │   └── web
 │       ├── ai-modules
+│       │   ├── components
+│       │   ├── lib
+│       │   ├── scene
 │       │   ├── EgyptianModule.tsx
-│       │   └── EgyptianVoiceModule.tsx
+│       │   ├── EgyptianVoiceModule.tsx
+│       │   ├── page.tsx
+│       │   ├── types.ts
+│       │   └── utils.ts
 │       ├── app
 │       │   ├── (builder)
+│       │   ├── (code-tools)
 │       │   ├── (preview)
 │       │   ├── (public)
 │       │   ├── (published)
-│       │   ├── (tools)
 │       │   ├── (workspace)
 │       │   ├── ai-modules
 │       │   ├── api
 │       │   ├── api-reference
 │       │   ├── auth
+│       │   ├── builder
+│       │   ├── builder-ai
 │       │   ├── checkout
 │       │   ├── community
 │       │   ├── components
+│       │   ├── connect-storage
 │       │   ├── cookies
 │       │   ├── docs
 │       │   ├── homepage
 │       │   ├── marketplace
+│       │   ├── play
 │       │   ├── public-pages
 │       │   ├── settings
 │       │   ├── status
@@ -55,24 +58,56 @@
 │       │   ├── layout.tsx
 │       │   ├── marketing-migration-checklist.md
 │       │   ├── page.tsx
-│       │   └── playcanvas-timeout-fallback.test.tsx
+│       │   ├── playcanvas-timeout-fallback.test.tsx
+│       │   └── TriEngineShell.tsx
 │       ├── components
 │       │   ├── blocks
+│       │   ├── BYOC
+│       │   ├── engines
+│       │   ├── navigation
 │       │   ├── ui
+│       │   ├── AccessibilityOracle.tsx
+│       │   ├── AuthForm.tsx
+│       │   ├── ClientAccessibilityWrapper.tsx
+│       │   ├── Cloud3DViewer.tsx
 │       │   ├── DirectPlayCanvasHost.tsx
+│       │   ├── GlobalNavigation.tsx
 │       │   ├── IframePlayCanvasHost.tsx
+│       │   ├── index.ts
+│       │   ├── LibraryGrid.tsx
 │       │   ├── NpcPanel.tsx
 │       │   ├── PlayCanvasBridge.tsx
 │       │   ├── PlayCanvasEditorHost.test.tsx
-│       │   └── PlayCanvasEditorHost.tsx
+│       │   ├── PlayCanvasEditorHost.tsx
+│       │   ├── PlayCanvasPublisher.tsx
+│       │   ├── puck.config.ts
+│       │   ├── QuadEngineShell.tsx
+│       │   ├── Toast.tsx
+│       │   ├── UnifiedPuckAIBuilder.tsx
+│       │   ├── UnifiedWebGLStudioPlayCanvasEditor.tsx
+│       │   ├── VisualTranscript.tsx
+│       │   └── WebGLStudioViewer.tsx
+│       ├── data
+│       │   ├── ai
+│       │   ├── templates
+│       │   ├── cloud-connections.json
+│       │   └── wonderspace-projects.json
 │       ├── lib
 │       │   ├── ai
 │       │   ├── collaboration
 │       │   ├── crypto
+│       │   ├── engines
+│       │   ├── hooks
+│       │   ├── projects
+│       │   ├── runners
+│       │   ├── scene
+│       │   ├── services
+│       │   ├── storage
 │       │   ├── supabase
 │       │   ├── webhooks
 │       │   ├── wonder-build
 │       │   ├── wonderspace
+│       │   ├── accessibility-context.tsx
 │       │   ├── aiNpcProvider.ts
 │       │   ├── auth-context.tsx
 │       │   ├── blockRegistry.ts
@@ -80,31 +115,45 @@
 │       │   ├── env.ts
 │       │   ├── logger.ts
 │       │   ├── logStreamer.ts
+│       │   ├── navigation.ts
 │       │   ├── playcanvas.test.ts
 │       │   ├── playcanvas.ts
+│       │   ├── playcanvasBootstrap.test.ts
+│       │   ├── playcanvasBootstrap.ts
 │       │   ├── playcanvasBridgeProtocol.ts
+│       │   ├── screen-reader.ts
 │       │   ├── smokeAuth.ts
+│       │   ├── storage.ts
+│       │   ├── supabase-service.ts
+│       │   ├── supabaseClient.ts
+│       │   ├── supabaseServer.ts
+│       │   ├── templates.ts
 │       │   ├── theatreBridgeSetup.test.ts
 │       │   ├── theatreBridgeSetup.ts
-│       │   └── utils.ts
+│       │   ├── utils.ts
+│       │   └── webcontainer.ts
 │       ├── packages
 │       │   └── ui
 │       ├── public
 │       │   ├── images
 │       │   ├── playcanvas
-│       │   └── wonderplay
+│       │   ├── webglstudio
+│       │   └── Wonder-build
 │       ├── scripts
 │       │   ├── dev-port.mjs
 │       │   └── run-dev.mjs
 │       ├── services
 │       │   └── storage
 │       ├── styles
+│       │   ├── tie-dye-neon.css
 │       │   └── wonderland-core.css
 │       ├── types
 │       │   ├── ai-confession.ts
+│       │   ├── db.ts
 │       │   └── playground.ts
 │       ├── .gitignore
 │       ├── .tsconfig.json.swp
+│       ├── BUILD_DEPLOYMENT_GUIDE.md
 │       ├── components.json
 │       ├── declarations.d.ts
 │       ├── env.d.ts
@@ -119,6 +168,10 @@
 │       ├── tsconfig.builder.tsbuildinfo
 │       ├── tsconfig.json
 │       └── tsconfig.tsbuildinfo
+├── attached_assets
+│   ├── glb_bd1d3e59-047b-4a0a-a109-0ff0c38ad0c9_1774208056668.zip
+│   ├── glb_bd1d3e59-047b-4a0a-a109-0ff0c38ad0c9_1774208108281.zip
+│   └── glb_fbe51ae8-a91e-460f-b9b7-524d91d1e0be_1774208085494.zip
 ├── config
 │   ├── ai
 │   │   ├── CONSTITUTION.md
@@ -865,7 +918,15 @@
 │   ├── modules.html
 │   ├── openapi.html
 │   ├── openapi.yaml
-│   └── tree-directories.md
+│   ├── release-gates.md
+│   ├── tree-directories.md
+│   ├── UNIFIED_BUILDER_ARCHITECTURE.md
+│   ├── UNIFIED_BUILDER_DOCUMENTATION_INDEX.md
+│   ├── UNIFIED_BUILDER_IMPLEMENTATION_SUMMARY.md
+│   ├── UNIFIED_BUILDER_QUICKSTART.md
+│   ├── UNIFIED_BUILDER_TEST_GUIDE.md
+│   ├── UNIFIED_BUILDER_WIRING.md
+│   └── WEBGLSTUDIO_PLAYCANVAS_INTEGRATION.md
 ├── engine
 │   └── core
 │       ├── ai
@@ -901,8 +962,6 @@
 │       │   └── usage.ts
 │       ├── plugins
 │       │   └── extensionManager.ts
-│       ├── projects
-│       │   └── storage.ts
 │       ├── resources
 │       │   └── throttling.ts
 │       ├── runners
@@ -922,13 +981,27 @@
 │   └── services
 │       ├── integrations
 │       │   └── github.ts
+│       ├── jobs
+│       │   ├── orchestrateScenePipeline.ts
+│       │   ├── sceneJob.ts
+│       │   └── sceneRunnerHarness.ts
 │       ├── marketplace
 │       │   └── MarketplaceAgent.ts
 │       ├── storage
+│       │   ├── __tests__
+│       │   ├── generateSceneJson.ts
+│       │   ├── promoteTempScene.ts
 │       │   ├── provider.ts
-│       │   └── SupabaseProvider.ts
-│       └── stripe
-│           └── payments.ts
+│       │   ├── README.md
+│       │   ├── sceneSchema.ts
+│       │   ├── SupabaseProvider.ts
+│       │   ├── types.ts
+│       │   ├── uploadSceneToTemp.ts
+│       │   └── validateScene.ts
+│       ├── stripe
+│       │   └── payments.ts
+│       └── workspace
+│           └── saveSceneRecord.ts
 ├── packages
 │   ├── puck-editor
 │   │   └── package.json
@@ -938,31 +1011,89 @@
 │   │   ├── package.json
 │   │   └── puck.css
 │   ├── shadon
+│   │   ├── components
+│   │   │   ├── Alert.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   ├── Button.tsx
+│   │   │   └── Card.tsx
+│   │   ├── lib
+│   │   │   └── puck-integration.ts
 │   │   ├── index.ts
 │   │   └── package.json
+│   ├── theia-ide
+│   │   ├── index.ts
+│   │   └── package.json
+│   ├── theia-standard
+│   │   ├── lib
+│   │   │   └── frontend
+│   │   ├── src-gen
+│   │   │   ├── backend
+│   │   │   └── frontend
+│   │   ├── .yo-rc.json
+│   │   ├── gen-webpack.config.js
+│   │   ├── gen-webpack.node.config.js
+│   │   ├── package.json
+│   │   └── webpack.config.js
 │   ├── unreal-bridge
 │   │   └── package.json
 │   ├── unreal-engine-bridge
 │   │   └── package.json
-│   └── unreal-wonder-build
-│       ├── components
-│       │   ├── _archive
-│       │   ├── engineBridge.ts
-│       │   └── PlayCanvasEngine.tsx
-│       ├── scripts
-│       │   ├── 1-docker-login.sh
-│       │   ├── 2-docker-build.sh
-│       │   └── verify_logic.js
-│       ├── src
-│       │   ├── puckAiBlueprint.ts
-│       │   └── UnrealWonderBuildPage.tsx
-│       ├── package.json
-│       └── PlayCanvasEngine.tsx
+│   ├── unreal-wonder-build
+│   │   ├── components
+│   │   │   ├── _archive
+│   │   │   ├── engineBridge.ts
+│   │   │   └── PlayCanvasEngine.tsx
+│   │   ├── scripts
+│   │   │   ├── 1-docker-login.sh
+│   │   │   ├── 2-docker-build.sh
+│   │   │   └── verify_logic.js
+│   │   ├── src
+│   │   │   ├── playcanvas
+│   │   │   ├── puckAiBlueprint.ts
+│   │   │   └── UnrealWonderBuildPage.tsx
+│   │   ├── index.ts
+│   │   ├── package.json
+│   │   ├── PlayCanvasEngine.tsx
+│   │   └── tsconfig.json
+│   └── wonderplay
+│       └── src
+│           └── loadScene.ts
+├── playcanvas-webgpu
+│   ├── src
+│   │   └── main.ts
+│   ├── index.html
+│   ├── package.json
+│   ├── style.css
+│   ├── tsconfig.json
+│   └── vite.config.ts
 ├── public
 │   ├── images
+│   │   ├── screenshots
+│   │   │   ├── playcanvas-builder.svg
+│   │   │   ├── puck-builder.svg
+│   │   │   ├── theia-builder.svg
+│   │   │   └── webgl-builder.svg
 │   │   ├── ai-wonderland-logo.png
 │   │   ├── wonderland-bg.png
 │   │   └── wonderspace-logo.svg
+│   ├── litefilesystem.js-master
+│   │   ├── src
+│   │   │   ├── css
+│   │   │   ├── fonts
+│   │   │   ├── include
+│   │   │   ├── js
+│   │   │   ├── backup.php
+│   │   │   ├── index.html
+│   │   │   ├── install.php
+│   │   │   ├── litefileserver.js
+│   │   │   └── server.php
+│   │   ├── .gitignore
+│   │   ├── github.css
+│   │   ├── index.html
+│   │   ├── INSTALL.md
+│   │   ├── LICENSE
+│   │   ├── README.md
+│   │   └── style.css
 │   └── ai-wonderland-intro.mp4
 ├── runners
 │   ├── aiWorker.ts
@@ -981,16 +1112,34 @@
 │   ├── fix-imports.sh
 │   ├── generate-tree-directories.sh
 │   ├── no-placeholders.sh
+│   ├── release-gates-check.sh
 │   ├── smoke.sh
 │   ├── sync-guides.sh
 │   └── update-readme.sh
 ├── supabase
+│   ├── .temp
+│   │   └── cli-latest
 │   ├── functions
 │   │   └── signup-rate-limiter
 │   │       └── index.ts
 │   └── migrations
 │       ├── 20250108_signup_rate_limiter_migration.sql
-│       └── 20250214_wonder_build_builder_tables.sql
+│       ├── 20250214_wonder_build_builder_tables.sql
+│       ├── 20260318162150_new-migration.sql
+│       └── 20260318_byoc_cloud_connections.sql
+├── templates
+│   ├── 3d
+│   │   ├── basic-environment.json
+│   │   ├── character-rig.json
+│   │   └── empty-scene.json
+│   ├── mobile
+│   │   ├── mobile-home.json
+│   │   ├── mobile-list.json
+│   │   └── mobile-profile.json
+│   └── web
+│       ├── dashboard-shell.json
+│       ├── hero-split.json
+│       └── pricing-3-tier.json
 ├── tests
 │   ├── integration
 │   │   └── collaboration.test.ts
@@ -1090,13 +1239,15 @@
 │       ├── Navbar.tsx
 │       ├── NavOverlay.tsx
 │       ├── pagesDropdown.tsx
+│       ├── QuadEngineShell.tsx
 │       ├── ResourcePlaceholder.tsx
 │       ├── SpiritGuide.tsx
 │       └── WonderlandGallery.tsx
+├── Wonder-build
+│   └── puckAiBlueprint.ts
 ├── wonderplay
 │   ├── index.html
 │   ├── main.js
-│   ├── package-lock.json
 │   └── package.json
 ├── WonderSpace
 │   ├── ide
@@ -1119,7 +1270,6 @@
 │   │   │   └── frontend
 │   │   ├── gen-webpack.config.js
 │   │   ├── gen-webpack.node.config.js
-│   │   ├── package-lock.json
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   └── webpack.config.js
@@ -1135,9 +1285,9 @@
 ├── .gitignore
 ├── .gitlab-ci.yml
 ├── .npmrc
+├── .replit
 ├── ARCHITECTURE.md
 ├── components.json
-├── components.json.bak
 ├── CONTRIBUTING.md
 ├── DEPLOYMENT.md
 ├── FAQ.md
@@ -1149,13 +1299,16 @@
 ├── project-structure.txt
 ├── README.md
 ├── registry.json
+├── replit.md
 ├── SECURITY.md
 ├── STRUCTURE.txt
+├── supabase-webgl-studio-integration.md
 ├── tsconfig.base.json
 ├── tsconfig.docs.json
 ├── tsconfig.test.json
 ├── typedoc.json
 ├── vercel.json
 ├── verify_logic.js
-└── vitest.config.ts
+├── vitest.config.ts
+└── webgl-studio-react-integration.md
 ```
