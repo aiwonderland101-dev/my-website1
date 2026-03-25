@@ -1,1 +1,1 @@
-export { default } from './components/PlayCanvasEngine';
+export { default as PlayCanvasEngine } from './components/PlayCanvasEngine';

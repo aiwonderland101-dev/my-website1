@@ -1,8 +1,8 @@
 {
   "name": "unreal-wonder-build",
   "version": "0.1.0",
-  "main": "./src/UnrealWonderBuildPage.tsx",
-  "types": "./src/UnrealWonderBuildPage.tsx",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "dependencies": {
     "playcanvas": "^2.17.0"
   },

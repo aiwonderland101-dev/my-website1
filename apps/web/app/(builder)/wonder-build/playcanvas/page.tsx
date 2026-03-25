@@ -8,6 +8,8 @@ import { Breadcrumbs } from "@/app/components/navigation/Breadcrumbs";
 import { PageHeader } from "@/app/components/layout/PageHeader";
 import { EmptyState, SkeletonGrid } from "@/app/components/feedback/EmptyState";
 import { ToastStack, type ToastItem } from "@/app/components/feedback/ToastStack";
+import { GlobalNavigation } from "@/components/navigation/GlobalNavigation";
+import { SmartBreadcrumbs } from "@/components/navigation/SmartBreadcrumbs";
 import NpcPanel from "@/components/NpcPanel";
 import PlayCanvasEditorHost from "@/components/PlayCanvasEditorHost";
 import PlayCanvasPublisher from "@/components/PlayCanvasPublisher";
@@ -64,9 +66,13 @@ function PlayCanvasInner() {
   }, [bridgeFailed, bridgeLoading, pushToast, sceneId]);
 
   return (
-    <div className="space-y-4 text-white">
-      <ToastStack toasts={toasts} />
-      <PageHeader
+    <div className="min-h-screen bg-black text-white">
+      <GlobalNavigation />
+      <div className="pt-20 px-4 sm:px-6 lg:px-8">
+        <SmartBreadcrumbs />
+        <div className="space-y-4">
+          <ToastStack toasts={toasts} />
+          <PageHeader
         lead={<Breadcrumbs items={[{ href: "/wonder-build", label: "Wonder Build" }, { label: "WonderPlay" }]} />}
         title="WonderPlay Bridge"
         subtitle="Open and validate your PlayCanvas scene in a dedicated builder route with graceful loading and failure states."
@@ -182,6 +188,8 @@ function PlayCanvasInner() {
         <Link href="/wonder-build/puck" className="text-sm text-white/70 hover:text-white">
           ← Back to Puck Layout Studio
         </Link>
+      </div>
+        </div>
       </div>
     </div>
   );

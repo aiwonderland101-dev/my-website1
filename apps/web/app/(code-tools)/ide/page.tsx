@@ -4,8 +4,14 @@ import Link from 'next/link';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { Breadcrumbs } from '@/app/components/navigation/Breadcrumbs';
 import { PageHeader } from '@/app/components/layout/PageHeader';
+import { GlobalNavigation } from '@/components/navigation/GlobalNavigation';
+import { SmartBreadcrumbs } from '@/components/navigation/SmartBreadcrumbs';
 import { ConfessionsDrawer, type ConfessionEntry } from '@/app/(builder)/wonder-build/components/ConfessionsDrawer';
 import { CONFESSIONS_STORAGE_KEY } from '@/app/(builder)/wonder-build/context/SovereignOSContext';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Monaco Editor to avoid SSR issues
+const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
 type Status = 'loading' | 'ready' | 'empty' | 'error';
 
@@ -40,8 +46,12 @@ export default function IdeWorkspacePage() {
   const { confessions, refresh } = useStoredConfessions();
 
   return (
-    <main className="mx-auto max-w-7xl space-y-4 px-4 py-6 text-white sm:px-6">
-      <PageHeader
+    <main className="min-h-screen bg-black text-white">
+      <GlobalNavigation />
+      <div className="pt-20 px-4 sm:px-6 lg:px-8">
+        <SmartBreadcrumbs />
+        <div className="mx-auto max-w-7xl space-y-4">
+          <PageHeader
         lead={<Breadcrumbs items={[{ href: '/dashboard', label: 'Dashboard' }, { href: '/wonder-build/puck', label: 'Puck Mode' }, { label: 'Code Mode' }]} />}
         title="IDE Code Mode"
         subtitle="Edit repository files in a dedicated code workspace. Visual layout editing remains in Puck mode."
@@ -117,6 +127,8 @@ export default function IdeWorkspacePage() {
           onError={() => setStatus('error')}
         />
       ) : null}
+        </div>
+      </div>
     </main>
   );
 }

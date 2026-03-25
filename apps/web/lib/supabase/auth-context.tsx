@@ -47,6 +47,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.warn('Failed to load cloudToken from sessionStorage:', error)
     }
 
+    // Check if we're in development mode
+    const isDevMode = process.env.NEXT_PUBLIC_DEV_MODE === 'true'
+
+    if (isDevMode) {
+      // Development mode - skip authentication
+      console.log('🔧 Development mode: Skipping Supabase authentication')
+      setUser({
+        id: 'dev-user',
+        email: 'dev@example.com',
+        user_metadata: { name: 'Development User' }
+      })
+      setSession({ user: { id: 'dev-user', email: 'dev@example.com' } })
+      setLoading(false)
+      return
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session ?? null)
       setUser(data.session?.user ?? null)
