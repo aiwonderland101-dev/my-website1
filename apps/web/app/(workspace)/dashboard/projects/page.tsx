@@ -30,11 +30,19 @@ export default function ProjectsPage() {
 
   return (
     <div className="p-8 space-y-4">
-      <header>
-        <h1 className="text-3xl font-bold mb-2">Projects</h1>
-        <p className="text-sm text-muted-foreground">
-          Open your workspaces or jump straight into Wonder-Build.
-        </p>
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Projects</h1>
+          <p className="text-sm text-muted-foreground">
+            Open your workspaces or jump straight into Wonder-Build.
+          </p>
+        </div>
+        <Link
+          href="/wonderspace"
+          className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-600 px-4 text-sm font-semibold hover:bg-emerald-500 transition-colors whitespace-nowrap"
+        >
+          💻 WonderSpace IDE
+        </Link>
       </header>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

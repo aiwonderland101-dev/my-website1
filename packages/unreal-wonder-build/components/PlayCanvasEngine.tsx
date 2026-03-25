@@ -5,13 +5,38 @@ import * as pc from 'playcanvas';
 
 type EngineStatus = 'loading' | 'empty' | 'ready' | 'error';
 
-type PlayCanvasEngineProps = {
-  assetUrl?: string;
+type SceneEntity = {
+  id: string;
+  name: string;
+  type: 'box' | 'sphere' | 'cylinder' | 'plane' | 'custom';
+  position?: { x: number; y: number; z: number };
+  rotation?: { x: number; y: number; z: number };
+  scale?: { x: number; y: number; z: number };
+  color?: string;
 };
 
-export default function PlayCanvasEngine({ assetUrl }: PlayCanvasEngineProps) {
+type SceneState = {
+  entities: SceneEntity[];
+};
+
+type PlayCanvasEngineProps = {
+  assetUrl?: string;
+  scene?: SceneState;
+  script?: string;
+  onSceneUpdate?: (scene: SceneState) => void;
+  onStatus?: (status: EngineStatus) => void;
+};
+
+export default function PlayCanvasEngine({
+  assetUrl,
+  scene,
+  script,
+  onSceneUpdate,
+  onStatus,
+}: PlayCanvasEngineProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const appRef = useRef<pc.Application | null>(null);
+  const dynamicRootRef = useRef<pc.Entity | null>(null);
   const [status, setStatus] = useState<EngineStatus>(assetUrl ? 'loading' : 'empty');
 
   useEffect(() => {

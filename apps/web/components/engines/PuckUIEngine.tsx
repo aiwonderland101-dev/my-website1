@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { SceneEntity, SceneState } from './BuilderStore';
 
 interface PuckUIEngineProps {
-  engineState?: any;
-  onStateChange?: (state: any) => void;
+  scene?: SceneState;
+  onSceneChange?: (scene: SceneState) => void;
 }
 
 const UI_COMPONENTS = [
@@ -66,11 +68,42 @@ const ANIMATION_PRESETS = [
   { name: 'Pulse', duration: '1000ms' },
 ];
 
-export default function PuckUIEngine({ engineState, onStateChange }: PuckUIEngineProps) {
+export default function PuckUIEngine({ scene, onSceneChange }: PuckUIEngineProps) {
   const [activeTab, setActiveTab] = useState<'components' | 'layout' | 'colors' | 'typography' | 'responsive'>('components');
   const [selectedCategory, setSelectedCategory] = useState<string>('interactive');
+  const [localScene, setLocalScene] = useState<SceneState>(scene ?? { entities: [] });
 
-  const categories = Array.from(new Set(UI_COMPONENTS.map(c => c.category)));
+  useEffect(() => {
+    if (scene) setLocalScene(scene);
+  }, [scene]);
+
+  const updateScene = (next: SceneState) => {
+    setLocalScene(next);
+    onSceneChange?.(next);
+  };
+
+  const addEntity = () => {
+    const newEntity: SceneEntity = {
+      id: `entity-${Date.now()}`,
+      name: `Entity ${localScene.entities.length + 1}`,
+      type: 'box',
+      position: { x: 0, y: 0.5, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
+      scale: { x: 1, y: 1, z: 1 },
+      color: '#7c3aed',
+    };
+    updateScene({ entities: [...localScene.entities, newEntity] });
+  };
+
+  const updateEntity = (entityId: string, patch: Partial<SceneEntity>) => {
+    updateScene({
+      entities: localScene.entities.map((entity) =>
+        entity.id === entityId ? { ...entity, ...patch } : entity,
+      ),
+    });
+  };
+
+  const categories = Array.from(new Set(UI_COMPONENTS.map((c) => c.category)));
 
   return (
     <div className="w-full h-full flex flex-col bg-gradient-to-br from-black via-black to-black text-white overflow-hidden">

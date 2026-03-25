@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface TheiaIDEEngineProps {
-  engineState?: any;
-  onStateChange?: (state: any) => void;
+  script?: string;
+  onScriptSave?: (script: string) => void;
 }
 
 interface FileNode {
@@ -47,7 +47,7 @@ const PROJECT_STRUCTURE: FileNode = {
   ]
 };
 
-const CODE_SNIPPET = `import React, { useState } from 'react';
+const DEFAULT_CODE = `import React, { useState } from 'react';
 
 export function Counter() {
   const [count, setCount] = useState(0);
@@ -89,10 +89,19 @@ const BUILD_TOOLS = [
   { name: 'npm run format', command: 'npm run format', description: 'Format code' },
 ];
 
-export default function TheiaIDEEngine({ engineState, onStateChange }: TheiaIDEEngineProps) {
+export default function TheiaIDEEngine({ script, onScriptSave }: TheiaIDEEngineProps) {
   const [activeTab, setActiveTab] = useState<'editor' | 'explorer' | 'extensions' | 'settings' | 'terminal'>('editor');
   const [selectedFile, setSelectedFile] = useState<string>('App.tsx');
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['src', 'components']));
+  const [editorContent, setEditorContent] = useState<string>(script ?? DEFAULT_CODE);
+
+  useEffect(() => {
+    setEditorContent(script ?? DEFAULT_CODE);
+  }, [script]);
+
+  const saveScript = () => {
+    onScriptSave?.(editorContent);
+  };
 
   const toggleFolder = (folderName: string) => {
     const newExpanded = new Set(expandedFolders);
@@ -281,12 +290,20 @@ export default function TheiaIDEEngine({ engineState, onStateChange }: TheiaIDEE
               <>
                 {/* Code Editor */}
                 <div className="flex-1 overflow-hidden flex flex-col p-4 bg-black/20">
-                  <div className="text-xs text-white/40 mb-2">Line 1, Column 1</div>
-                  <textarea
-                    value={CODE_SNIPPET}
-                    readOnly
-                    className="flex-1 bg-transparent border border-red-500/20 rounded p-3 text-xs font-mono text-white resize-none focus:outline-none focus:border-red-400 overflow-auto"
-                  />
+                  <div className="flex items-center justify-between text-xs text-white/40 mb-2">
+                  <span>Line 1, Column 1</span>
+                  <button
+                    onClick={saveScript}
+                    className="rounded border border-green-400/50 px-2 py-1 text-green-200 text-xs hover:bg-green-500/10"
+                  >
+                    Save Script
+                  </button>
+                </div>
+                <textarea
+                  value={editorContent}
+                  onChange={(e) => setEditorContent(e.target.value)}
+                  className="flex-1 bg-transparent border border-red-500/20 rounded p-3 text-xs font-mono text-white resize-none focus:outline-none focus:border-red-400 overflow-auto"
+                />
                 </div>
 
                 {/* Status Bar */}
