@@ -1,16 +1,31 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const getSupabase = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !key) {
+    return null;
+  }
+  
+  return createClient(url, key);
+};
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { projectId: string } }
 ) {
   try {
+    const supabase = getSupabase();
+    
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Service unavailable - Supabase not configured' },
+        { status: 503 }
+      );
+    }
+    
     const { projectId } = params;
     const { state } = await request.json();
 
