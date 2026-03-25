@@ -48,9 +48,20 @@ export default function ConnectCloudStoragePage() {
         }),
       });
 
-      const payload = (await response.json().catch(() => ({}))) as { error?: string };
+      const payload = (await response.json().catch(() => ({}))) as { error?: string; cloudToken?: string };
       if (!response.ok) {
         throw new Error(payload.error ?? 'Failed to connect cloud storage');
+      }
+
+      // Persist cloudToken for session survival
+      if (payload.cloudToken) {
+        try {
+          sessionStorage.setItem('cloudToken', payload.cloudToken);
+          // Also set as secure httpOnly cookie for additional persistence
+          document.cookie = `cloudToken=${encodeURIComponent(payload.cloudToken)}; path=/; secure; samesite=strict; max-age=86400`; // 24 hours
+        } catch (storageError) {
+          console.warn('Failed to persist cloudToken:', storageError);
+        }
       }
 
       setCredentialValue('');

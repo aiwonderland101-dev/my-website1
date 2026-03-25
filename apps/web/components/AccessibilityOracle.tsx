@@ -1,7 +1,8 @@
 'use client';
 
 import { useAccessibility } from '@/lib/accessibility-context';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { PlayCanvasBridgeMessage, SceneUpdateMessage } from '@/lib/playcanvasBridgeProtocol';
 
 export function AccessibilityOracle() {
   const {
@@ -20,6 +21,23 @@ export function AccessibilityOracle() {
 
   const [panelOpen, setPanelOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+
+  // Listen for BridgeMessages to announce cloud sync success
+  useEffect(() => {
+    const handleBridgeMessage = (event: MessageEvent) => {
+      const message = event.data as PlayCanvasBridgeMessage;
+      
+      if (message.type === 'scene:update') {
+        const sceneUpdate = message as SceneUpdateMessage;
+        if (sceneUpdate.payload.status === 'saved' && voiceEnabled) {
+          speak('Cloud sync successful. Your scene has been saved.');
+        }
+      }
+    };
+
+    window.addEventListener('message', handleBridgeMessage);
+    return () => window.removeEventListener('message', handleBridgeMessage);
+  }, [voiceEnabled, speak]);
 
   return (
     <>

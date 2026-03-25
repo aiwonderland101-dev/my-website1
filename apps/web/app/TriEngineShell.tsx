@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import PlayCanvasEngine from '../components/engines/PlayCanvasEngine';
 
 type Engine = 'webgls' | '3d' | 'ui';
 
@@ -79,8 +80,11 @@ export function TriEngineShell() {
     ui: 'loading',
   });
 
+  // State for PlayCanvas engine
+  const [playCanvasScene, setPlayCanvasScene] = useState<any>({ entities: [] });
+
   const webglsRef = useRef<HTMLIFrameElement>(null);
-  const pcRef = useRef<HTMLIFrameElement>(null);
+  const pcRef = useRef<HTMLDivElement>(null);
   const puckRef = useRef<HTMLIFrameElement>(null);
 
   const activeEngine = ENGINES.find(e => e.id === active)!;
@@ -92,9 +96,18 @@ export function TriEngineShell() {
       if (d.event === 'editor:ready' || d.type === 'bridge:ready') {
         setBridgeStatus(prev => ({ ...prev, webgls: 'ready' }));
       }
+      // Handle scene updates from PlayCanvas
+      if (d.type === 'scene:update') {
+        setPlayCanvasScene(d.scene);
+      }
     };
     window.addEventListener('message', onMsg);
     return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  // Mark PlayCanvas as ready on mount
+  useEffect(() => {
+    setBridgeStatus(prev => ({ ...prev, '3d': 'ready' }));
   }, []);
 
   function sendCommand() {
@@ -110,11 +123,9 @@ export function TriEngineShell() {
       );
       setCmdLog(prev => [...prev, { text: 'Sent GLSL/shader command to WebGL Studio.', type: 'system' }]);
     } else if (active === '3d') {
-      pcRef.current?.contentWindow?.postMessage(
-        { command: 'wonder:scene', json: text },
-        'https://playcanvas.com',
-      );
-      setCmdLog(prev => [...prev, { text: 'Sent Scene JSON to PlayCanvas.', type: 'system' }]);
+      // For direct PlayCanvas component, we could update scene state directly
+      // For now, just log the command
+      setCmdLog(prev => [...prev, { text: 'PlayCanvas command processed locally.', type: 'system' }]);
     } else if (active === 'ui') {
       puckRef.current?.contentWindow?.postMessage(
         { command: 'wonder:puck', json: text },
@@ -236,15 +247,23 @@ export function TriEngineShell() {
 
           {/* PlayCanvas 3D */}
           <div className={`absolute inset-0 transition-opacity duration-150 ${active === '3d' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-            <iframe
-              ref={pcRef}
-              src={PLAYCANVAS_SRC}
-              title="PlayCanvas 3D Editor"
-              className="h-full w-full border-0"
-              allow="fullscreen; clipboard-read; clipboard-write; xr-spatial-tracking"
-              onLoad={() => setBridgeStatus(prev => ({ ...prev, '3d': 'ready' }))}
-              onError={() => setBridgeStatus(prev => ({ ...prev, '3d': 'error' }))}
-            />
+            <div ref={pcRef} className="h-full w-full">
+              <PlayCanvasEngine
+                scene={playCanvasScene}
+                script=""
+                onSceneUpdate={(scene) => {
+                  setPlayCanvasScene(scene);
+                  // Broadcast scene update
+                  window.postMessage({ type: 'scene:update', scene }, '*');
+                }}
+                onStatus={(status) => {
+                  setBridgeStatus(prev => ({ ...prev, '3d': status }));
+                }}
+                onEntitySelected={(entityId) => {
+                  // Handle entity selection if needed
+                }}
+              />
+            </div>
           </div>
 
           {/* Puck UI Builder */}

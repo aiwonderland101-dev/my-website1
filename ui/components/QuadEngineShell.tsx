@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import PlayCanvasEngine from '../../apps/web/components/engines/PlayCanvasEngine';
+import TheiaIDEEngine from '../../apps/web/components/engines/TheiaIDEEngine';
 
 type Engine = 'code' | 'webgls' | '3d' | 'ui';
 
@@ -117,9 +119,13 @@ export function QuadEngineShell() {
   });
   const [sharedState, setSharedState] = useState<SharedState>(initialSharedState);
 
-  const theiaRef = useRef<HTMLIFrameElement>(null);
+  // State for PlayCanvas and Theia engines
+  const [playCanvasScene, setPlayCanvasScene] = useState<any>({ entities: [] });
+  const [theiaScript, setTheiaScript] = useState<string>('// Welcome to Theia IDE\nconsole.log("Hello World!");');
+
+  const theiaRef = useRef<HTMLDivElement>(null);
   const webglsRef = useRef<HTMLIFrameElement>(null);
-  const pcRef = useRef<HTMLIFrameElement>(null);
+  const pcRef = useRef<HTMLDivElement>(null);
   const puckRef = useRef<HTMLIFrameElement>(null);
 
   const activeEngine = ENGINES.find(e => e.id === active)!;
@@ -130,7 +136,9 @@ export function QuadEngineShell() {
       if (!d) return;
       if (d.event === 'editor:ready' || d.type === 'bridge:ready') {
         if (d.source === 'webgls') setBridgeStatus(prev => ({ ...prev, webgls: 'ready' }));
+        // Theia and PlayCanvas are now direct components, so mark them as ready immediately
         if (d.source === 'theia') setBridgeStatus(prev => ({ ...prev, code: 'ready' }));
+        if (d.source === 'playcanvas') setBridgeStatus(prev => ({ ...prev, '3d': 'ready' }));
       }
       // Handle shared state updates from Theia
       if (d.type === 'shared:update') {
@@ -138,17 +146,31 @@ export function QuadEngineShell() {
         // Broadcast to other engines
         broadcastSharedState();
       }
+      // Handle scene updates from PlayCanvas
+      if (d.type === 'scene:update') {
+        setPlayCanvasScene(d.scene);
+      }
+      // Handle script updates from Theia
+      if (d.type === 'script:update') {
+        setTheiaScript(d.script);
+      }
     };
     window.addEventListener('message', onMsg);
     return () => window.removeEventListener('message', onMsg);
   }, []);
 
+  // Mark direct component engines as ready on mount
+  useEffect(() => {
+    setBridgeStatus(prev => ({ ...prev, code: 'ready', '3d': 'ready' }));
+  }, []);
+
   const broadcastSharedState = () => {
     const message = { type: 'shared:state', state: sharedState };
-    theiaRef.current?.contentWindow?.postMessage(message, '*');
+    // Only broadcast to iframe-based engines
     webglsRef.current?.contentWindow?.postMessage(message, '*');
-    pcRef.current?.contentWindow?.postMessage(message, '*');
     puckRef.current?.contentWindow?.postMessage(message, '*');
+    // For direct components, we could emit events or use other mechanisms
+    // For now, they can access sharedState directly through props if needed
   };
 
   useEffect(() => {
@@ -297,15 +319,16 @@ export function QuadEngineShell() {
 
           {/* Theia Code Editor */}
           <div className={`absolute inset-0 transition-opacity duration-150 ${active === 'code' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-            <iframe
-              ref={theiaRef}
-              src={THEIA_SRC}
-              title="Theia Code Editor"
-              className="h-full w-full border-0"
-              allow="fullscreen; clipboard-read; clipboard-write"
-              onLoad={() => setBridgeStatus(prev => ({ ...prev, code: 'ready' }))}
-              onError={() => setBridgeStatus(prev => ({ ...prev, code: 'error' }))}
-            />
+            <div ref={theiaRef} className="h-full w-full">
+              <TheiaIDEEngine
+                script={theiaScript}
+                onScriptSave={(script) => {
+                  setTheiaScript(script);
+                  // Broadcast script update
+                  window.postMessage({ type: 'script:update', script }, '*');
+                }}
+              />
+            </div>
           </div>
 
           {/* WebGL Studio */}
@@ -323,15 +346,23 @@ export function QuadEngineShell() {
 
           {/* PlayCanvas 3D */}
           <div className={`absolute inset-0 transition-opacity duration-150 ${active === '3d' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
-            <iframe
-              ref={pcRef}
-              src={PLAYCANVAS_SRC}
-              title="PlayCanvas 3D Editor"
-              className="h-full w-full border-0"
-              allow="fullscreen; clipboard-read; clipboard-write; xr-spatial-tracking"
-              onLoad={() => setBridgeStatus(prev => ({ ...prev, '3d': 'ready' }))}
-              onError={() => setBridgeStatus(prev => ({ ...prev, '3d': 'error' }))}
-            />
+            <div ref={pcRef} className="h-full w-full">
+              <PlayCanvasEngine
+                scene={playCanvasScene}
+                script={theiaScript}
+                onSceneUpdate={(scene) => {
+                  setPlayCanvasScene(scene);
+                  // Broadcast scene update
+                  window.postMessage({ type: 'scene:update', scene }, '*');
+                }}
+                onStatus={(status) => {
+                  setBridgeStatus(prev => ({ ...prev, '3d': status }));
+                }}
+                onEntitySelected={(entityId) => {
+                  // Handle entity selection if needed
+                }}
+              />
+            </div>
           </div>
 
           {/* Puck UI Builder */}
