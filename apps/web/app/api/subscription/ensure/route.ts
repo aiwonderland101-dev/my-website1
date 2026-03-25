@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+const SPARK_TOKENS_LIMIT = 25_000;
+
 function getBearerToken(req: NextRequest) {
   const h = req.headers.get("authorization") || "";
   const m = h.match(/^Bearer\s+(.+)$/i);
@@ -21,7 +23,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "Supabase env vars missing" }, { status: 500 });
     }
 
-    // Use the user's JWT to act as the user (RLS-safe)
     const supabase = createClient(url, anon, {
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
@@ -33,28 +34,30 @@ export async function POST(req: NextRequest) {
 
     const userId = userRes.user.id;
 
-    /**
-     * Store plan in a table (recommended).
-     * This assumes you have a `profiles` table with:
-     * - id (uuid, primary key, matches auth.users.id)
-     * - plan (text)
-     *
-     * If you don't have it yet, you can create later.
-     * For now, this will error if the table doesn't exist.
-     */
-    const { error: upsertErr } = await supabase
+    const { error: upsertProfileErr } = await supabase
       .from("profiles")
-      .upsert({ id: userId, plan: "free" }, { onConflict: "id" });
+      .upsert({ id: userId, plan: "spark" }, { onConflict: "id" });
 
-    if (upsertErr) {
+    if (upsertProfileErr) {
       return NextResponse.json(
-        { ok: false, error: upsertErr.message, hint: "Do you have a profiles table with id + plan?" },
+        { ok: false, error: upsertProfileErr.message, hint: "Do you have a profiles table with id + plan?" },
         { status: 400 }
       );
     }
 
-    return NextResponse.json({ ok: true, plan: "free" });
-  } catch (err) {
+    const { error: upsertUsageErr } = await supabase
+      .from("user_usage")
+      .upsert({ user_id: userId, plan: "spark", tokens_limit: SPARK_TOKENS_LIMIT }, { onConflict: "user_id" });
+
+    if (upsertUsageErr) {
+      return NextResponse.json(
+        { ok: false, error: upsertUsageErr.message, hint: "Do you have a user_usage table with user_id + plan + tokens_limit?" },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({ ok: true, plan: "spark", tokensLimit: SPARK_TOKENS_LIMIT });
+  } catch {
     return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 });
   }
 }
