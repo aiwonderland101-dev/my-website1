@@ -57,7 +57,7 @@ export default function ConnectCloudStoragePage() {
       if (payload.cloudToken) {
         try {
           sessionStorage.setItem('cloudToken', payload.cloudToken);
-          // Also set as secure httpOnly cookie for additional persistence
+          // Also set as a secure cookie for additional persistence (HttpOnly must be set server-side)
           document.cookie = `cloudToken=${encodeURIComponent(payload.cloudToken)}; path=/; secure; samesite=strict; max-age=86400`; // 24 hours
         } catch (storageError) {
           console.warn('Failed to persist cloudToken:', storageError);

@@ -13,6 +13,22 @@ export default function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  const getSafeRedirectPath = (value: string | null): string => {
+    if (!value) {
+      return '/wonder-build'
+    }
+
+    if (!value.startsWith('/')) {
+      return '/wonder-build'
+    }
+
+    if (value.startsWith('//')) {
+      return '/wonder-build'
+    }
+
+    return value
+  }
+
   const handleLogin = async () => {
     setLoading(true)
 
@@ -32,7 +48,7 @@ export default function LoginForm() {
       document.cookie = `sb-access-token=${data.session.access_token}; path=/`
       document.cookie = `sb-refresh-token=${data.session.refresh_token}; path=/`
 
-      const redirectTo = searchParams.get('redirectTo') || '/wonder-build'
+      const redirectTo = getSafeRedirectPath(searchParams.get('redirectTo'))
       router.push(redirectTo)
     }
 
