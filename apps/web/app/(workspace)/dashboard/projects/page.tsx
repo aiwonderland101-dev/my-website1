@@ -58,10 +58,10 @@ export default function ProjectsPage() {
               </div>
               <div className="flex gap-2 pt-1">
                 <Link
-                  href={`/wonder-build?projectId=${project.id}`}
+                  href={`/unreal-wonder-build?projectId=${project.id}`}
                   className="px-3 py-2 rounded-md bg-purple-600 text-white text-sm"
                 >
-                  Open in Wonder-Build
+                  Open Builder
                 </Link>
                 <Link
                   href={`/workspace/wonderspace/${project.id}`}
