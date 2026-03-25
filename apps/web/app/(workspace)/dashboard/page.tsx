@@ -224,14 +224,16 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <EmptyState
-                    title="No projects yet"
-                    description="Create your first project in Wonder Build or import a project export to get started."
+                    icon="🌍"
+                    title="Create Your First Project"
+                    description="Start building amazing websites, 3D games, and interactive experiences. Choose how you want to create — drag & drop, code, or AI powered."
                     cta={
                       <Link
                         href="/wonder-build"
-                        className="inline-flex h-10 items-center rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 px-4 text-sm font-bold"
+                        className="inline-flex h-11 items-center rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 text-sm font-bold text-white shadow-lg hover:shadow-xl transition-all gap-2"
                       >
-                        Create First Project
+                        <span>✨</span>
+                        <span>Create First Project</span>
                       </Link>
                     }
                   />

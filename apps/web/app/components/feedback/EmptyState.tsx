@@ -1,11 +1,39 @@
 import { type ReactNode } from "react";
 
-export function EmptyState({ title, description, cta }: { title: string; description: string; cta?: ReactNode }) {
+export function EmptyState({ 
+  title, 
+  description, 
+  cta,
+  icon = "📦"
+}: { 
+  title: string; 
+  description: string; 
+  cta?: ReactNode;
+  icon?: string;
+}) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/20 bg-white/[0.02] px-6 py-10 text-center">
-      <h3 className="text-lg font-bold">{title}</h3>
-      <p className="mx-auto mt-2 max-w-xl text-sm text-white/60">{description}</p>
-      {cta ? <div className="mt-5">{cta}</div> : null}
+    <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/50 via-transparent to-purple-900/10 px-6 py-16 text-center backdrop-blur-sm">
+      {/* Icon */}
+      <div className="flex justify-center">
+        <div className="text-5xl mb-4 inline-block animate-bounce">{icon}</div>
+      </div>
+      
+      {/* Title */}
+      <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+        {title}
+      </h3>
+      
+      {/* Description */}
+      <p className="mx-auto mt-3 max-w-sm text-sm text-white/60 leading-relaxed">
+        {description}
+      </p>
+      
+      {/* CTA */}
+      {cta ? (
+        <div className="mt-8 flex justify-center">
+          {cta}
+        </div>
+      ) : null}
     </div>
   );
 }

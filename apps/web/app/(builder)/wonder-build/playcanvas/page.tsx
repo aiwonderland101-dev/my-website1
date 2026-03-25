@@ -13,6 +13,8 @@ import { SmartBreadcrumbs } from "@/components/navigation/SmartBreadcrumbs";
 import NpcPanel from "@/components/NpcPanel";
 import PlayCanvasEditorHost from "@/components/PlayCanvasEditorHost";
 import PlayCanvasPublisher from "@/components/PlayCanvasPublisher";
+import { SplitScreenEditor, SplitScreenToggle } from "@/components/SplitScreenEditor";
+import { Grid2DEditor, type GridEntity } from "@/components/Grid2DEditor";
 import { createNpcProviderFromEnv } from "@/lib/ai/convaiNpcProvider";
 import { buildPlayCanvasEditorUrl, getPlayCanvasMode } from "@/lib/playcanvas";
 
@@ -31,6 +33,31 @@ function PlayCanvasInner() {
   const [bridgeLoading, setBridgeLoading] = useState(Boolean(sceneId));
   const [bridgeFailed, setBridgeFailed] = useState(false);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [splitScreenEnabled, setSplitScreenEnabled] = useState(false);
+  const [gridEntities, setGridEntities] = useState<GridEntity[]>([
+    {
+      id: 'ground',
+      name: 'World Floor',
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 200,
+      rotation: 0,
+      color: '#1a1a1a',
+      type: 'rect',
+    },
+    {
+      id: 'spawn',
+      name: 'Player Spawn',
+      x: 100,
+      y: 100,
+      width: 30,
+      height: 30,
+      rotation: 0,
+      color: '#9d4edd',
+      type: 'circle',
+    },
+  ]);
   const npcProvider = useMemo(() => createNpcProviderFromEnv(), []);
 
   useEffect(() => {
@@ -72,21 +99,30 @@ function PlayCanvasInner() {
         <SmartBreadcrumbs />
         <div className="space-y-4">
           <ToastStack toasts={toasts} />
-          <PageHeader
-        lead={<Breadcrumbs items={[{ href: "/wonder-build", label: "Wonder Build" }, { label: "WonderPlay" }]} />}
-        title="WonderPlay Bridge"
-        subtitle="Open and validate your PlayCanvas scene in a dedicated builder route with graceful loading and failure states."
-        action={
-          <a
-            href={editorUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-10 items-center rounded-lg bg-cyan-400 px-4 text-sm font-semibold text-black"
-          >
-            Open in PlayCanvas
-          </a>
-        }
-      />
+          <div className="flex items-center justify-between">
+            <PageHeader
+              lead={<Breadcrumbs items={[{ href: "/wonder-build", label: "Wonder Build" }, { label: "WonderPlay" }]} />}
+              title="WonderPlay Bridge"
+              subtitle="Open and validate your PlayCanvas scene in a dedicated builder route with graceful loading and failure states."
+              action={
+                <a
+                  href={editorUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 items-center rounded-lg bg-cyan-400 px-4 text-sm font-semibold text-black"
+                >
+                  Open in PlayCanvas
+                </a>
+              }
+            />
+            {sceneId && (
+              <SplitScreenToggle 
+                isEnabled={splitScreenEnabled} 
+                onToggle={setSplitScreenEnabled}
+                layoutMode="horizontal"
+              />
+            )}
+          </div>
 
       <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs text-white/80">
         <span className="font-semibold">PlayCanvas mode:</span>
@@ -109,7 +145,72 @@ function PlayCanvasInner() {
             </a>
           }
         />
+      ) : splitScreenEnabled ? (
+        // Split-Screen Mode: 2D Grid + 3D Viewport
+        <div className="min-h-[700px] rounded-2xl border border-white/10 overflow-hidden">
+          <SplitScreenEditor
+            layoutMode="horizontal"
+            defaultSplit={50}
+            leftPanel={
+              <Grid2DEditor 
+                entities={gridEntities}
+                onEntitiesChange={(entities) => {
+                  setGridEntities(entities);
+                  pushToast(`Updated ${entities.length} entities`, 'success');
+                }}
+                snapToGrid={true}
+                showGrid={true}
+              />
+            }
+            rightPanel={
+              <div className="h-full w-full">
+                {bridgeFailed ? (
+                  <div className="p-6 h-full flex items-center justify-center">
+                    <div className="rounded-2xl border border-red-400/40 bg-red-500/10 px-6 py-8 text-center">
+                      <h3 className="text-lg font-bold text-white">Embed blocked — continue in PlayCanvas</h3>
+                      <p className="mx-auto mt-2 max-w-2xl text-sm text-white/70">
+                        The in-app WonderPlay embed did not report readiness in time. Open the editor in a new tab to continue building.
+                      </p>
+                      <div className="mt-5">
+                        <a
+                          href={editorUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex h-10 items-center rounded-lg bg-cyan-400 px-4 text-sm font-semibold text-black"
+                        >
+                          Open PlayCanvas in New Tab
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {bridgeLoading ? (
+                      <div className="p-4 h-full">
+                        <SkeletonGrid cards={2} />
+                      </div>
+                    ) : null}
+                    <PlayCanvasEditorHost
+                      sceneId={sceneId}
+                      onReady={() => {
+                        setBridgeLoading(false);
+                        setBridgeFailed(false);
+                        pushToast("WonderPlay connected.", "success");
+                      }}
+                      onError={() => {
+                        setBridgeLoading(false);
+                        setBridgeFailed(true);
+                        pushToast("Could not embed WonderPlay. Continue in a new tab.", "error");
+                      }}
+                    />
+                  </>
+                )}
+              </div>
+            }
+          />
+        </div>
       ) : (
+        // Standard Mode: Full-width PlayCanvas + Publisher sidebar
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* PlayCanvas Editor - Takes up 2 columns on large screens */}
           <div className="lg:col-span-2 relative min-h-[560px] overflow-hidden rounded-2xl border border-white/10 bg-black/40">
@@ -167,8 +268,6 @@ function PlayCanvasInner() {
           </div>
         </div>
       )}
-
-      <NpcPanel
         provider={npcProvider}
         onProviderError={(message) => {
           pushToast(message, "error");

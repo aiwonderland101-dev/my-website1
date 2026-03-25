@@ -161,7 +161,6 @@
     // Force re-render of assets panel if using PlayCanvas Cloud Editor
     if (window.pc && window.pc.Assets) {
       // Trigger asset panel refresh
-      console.log('[PlayCanvas Bridge] Assets panel refresh triggered')
     }
   }
 
@@ -181,10 +180,6 @@
         if (app && app.root) {
           attachEntityListeners(app.root)
           sendSceneSnapshot()
-          console.log(
-            '[PlayCanvas Bridge] Sync listeners attached to',
-            syncConfig.syncAttributes
-          )
         } else {
           // Retry after app initialization
           setTimeout(() => {
@@ -206,7 +201,6 @@
       case 'INJECT_ASSET': {
         // Create asset in scene
         const { name, type, url } = event.data
-        console.log('[PlayCanvas Bridge] Injecting asset:', name)
 
         // This would depend on PlayCanvas SDK
         // Example for GLB import:
@@ -214,7 +208,6 @@
           const app = getApp()
           if (app) {
             // Use PlayCanvas loader
-            console.log('[PlayCanvas Bridge] Asset load initiated:', url)
           }
         }
         break
@@ -229,12 +222,6 @@
           const entity = app.root.findByGuid(entityId)
           if (entity && entity[property] !== undefined) {
             entity[property] = value
-            console.log(
-              '[PlayCanvas Bridge] Entity property updated:',
-              entityId,
-              property,
-              value
-            )
           }
         }
         break
@@ -254,7 +241,6 @@
       clearInterval(checkAppInterval)
       attachEntityListeners(app.root)
       sendSceneSnapshot()
-      console.log('[PlayCanvas Bridge] Initialized')
     }
   }, 300)
 

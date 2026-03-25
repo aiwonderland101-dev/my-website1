@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { PlayCanvasHostProps } from "@/components/PlayCanvasEditorHost";
 import { ensurePlayCanvasBootstrapLoaded, resetPlayCanvasBootstrapLoader } from "@/lib/playcanvasBootstrap";
+import { createSimpleStarterScene } from "@/lib/playcanvas/default-scene";
 
 export function DirectPlayCanvasHost({ sceneId, onReady, onError, onStatus }: PlayCanvasHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,6 +63,23 @@ export function DirectPlayCanvasHost({ sceneId, onReady, onError, onStatus }: Pl
           cleanup?.destroy?.();
           return;
         }
+
+        // Inject default scene if no sceneId provided (new/empty project)
+        if (!sceneId) {
+          try {
+            const appWindow = (window as any).__PlayCanvasApp || (window as any).pc?.Application?.instance;
+            if (appWindow) {
+              // Small delay to ensure app is fully initialized
+              setTimeout(() => {
+                createSimpleStarterScene(appWindow);
+                console.log('WonderSpace starter scene injected');
+              }, 500);
+            }
+          } catch (err) {
+            console.warn('Could not inject default scene:', err);
+          }
+        }
+
         onStatus?.("ready");
         onReady?.();
       } catch (error) {
