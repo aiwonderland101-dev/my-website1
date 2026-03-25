@@ -4,7 +4,7 @@ AI Wonderland is a monorepo for a production-oriented SaaS platform focused on A
 
 # engines & more
 - Puck (Wonder-build)
-- Theia eclipes ai (WonderSpace)
+- Theia Eclipse AI (WonderSpace)
 - Play canvas (unreal-wonder-build)
 - WebGLStudio.js
 - Next.js

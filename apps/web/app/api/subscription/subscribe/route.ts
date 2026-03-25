@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+const PLAN_LIMITS = {
+  spark: 25_000,
+  builder: 100_000,
+  visionary: 500_000,
+  sovereign: 2_500_000,
+} as const;
+
+type SubscriptionPlan = keyof typeof PLAN_LIMITS;
+
 function getBearerToken(req: NextRequest) {
   const h = req.headers.get("authorization") || "";
   const m = h.match(/^Bearer\s+(.+)$/i);
   return m?.[1] || null;
+}
+
+function isValidPlan(plan: string): plan is SubscriptionPlan {
+  return plan in PLAN_LIMITS;
 }
 
 export async function POST(request: NextRequest) {
@@ -15,10 +28,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { plan } = body;
+    const { plan } = body as { plan?: string };
 
-    if (!plan) {
-      return NextResponse.json({ success: false, error: "No plan provided" }, { status: 400 });
+    if (!plan || !isValidPlan(plan)) {
+      return NextResponse.json({ success: false, error: "Invalid plan provided" }, { status: 400 });
     }
 
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -38,21 +51,32 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = userRes.user.id;
+    const tokenLimit = PLAN_LIMITS[plan];
 
-    // Stub “billing success”, then record the plan
-    const { error: upsertErr } = await supabase
+    const { error: upsertProfileErr } = await supabase
       .from("profiles")
       .upsert({ id: userId, plan }, { onConflict: "id" });
 
-    if (upsertErr) {
+    if (upsertProfileErr) {
       return NextResponse.json(
-        { success: false, error: upsertErr.message, hint: "Do you have a profiles table with id + plan?" },
+        { success: false, error: upsertProfileErr.message, hint: "Do you have a profiles table with id + plan?" },
         { status: 400 }
       );
     }
 
-    return NextResponse.json({ success: true, plan });
-  } catch (err) {
+    const { error: upsertUsageErr } = await supabase
+      .from("user_usage")
+      .upsert({ user_id: userId, plan, tokens_limit: tokenLimit }, { onConflict: "user_id" });
+
+    if (upsertUsageErr) {
+      return NextResponse.json(
+        { success: false, error: upsertUsageErr.message, hint: "Do you have a user_usage table with user_id + plan + tokens_limit?" },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({ success: true, plan, tokensLimit: tokenLimit });
+  } catch {
     return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
   }
 }

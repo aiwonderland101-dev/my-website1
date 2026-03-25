@@ -268,6 +268,8 @@ function PlayCanvasInner() {
           </div>
         </div>
       )}
+
+      <NpcPanel
         provider={npcProvider}
         onProviderError={(message) => {
           pushToast(message, "error");

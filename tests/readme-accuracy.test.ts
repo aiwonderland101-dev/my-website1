@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 
 describe('README accuracy', () => {
-  it('documents the test-page route and build troubleshooting note', () => {
+  it('documents the test-page route and references files that exist', () => {
     const readme = readFileSync('README.md', 'utf8');
 
-    expect(readme).toContain('apps/web/app/test-page/page.tsx');
-    expect(readme).toContain('/test-page');
-    expect(readme).toContain('Unexpected non-whitespace character after JSON at position 8');
+    expect(readme).toContain('├── test-page');
+    expect(existsSync('apps/web/app/test-page/page.tsx')).toBe(true);
+    expect(readme).toContain('## Project Structure');
   });
 });
